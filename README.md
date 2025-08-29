@@ -2809,7 +2809,7 @@ print(f"Number of islands: {islands}")  # 1
 edges = [(0, 1, 4), (0, 2, 3), (1, 2, 1), (1, 3, 2), (2, 3, 4)]
 mst_edges, mst_weight = kruskal_minimum_spanning_tree(4, edges)
 print(f"MST edges: {mst_edges}, Total weight: {mst_weight}")
-
+```
 
 
 # Part IV: Dynamic Programming & Optimization
@@ -3179,7 +3179,7 @@ print(f"Max money robbed: {max_robbed}")  # 12
 s = "aab"
 min_cuts = palindrome_partitioning_min_cuts(s)
 print(f"Min cuts for palindrome partitioning '{s}': {min_cuts}")  # 1
-
+```
 
 
 ## 14. Kadane's Algorithm Pattern
@@ -3883,7 +3883,7 @@ print(f"Closest pair: {pair}, distance: {min_dist:.2f}")
 nums = [8, 4, 2, 1]
 inversions = count_inversions(nums)
 print(f"Inversions in {nums}: {inversions}")  # 6
-
+```
 
 
 # Part V: Backtracking & Enumeration
@@ -4261,7 +4261,7 @@ print(f"Palindrome partitions of '{s}': {palindromes}")
 ip_string = "25525511135"
 ip_addresses = restore_ip_addresses(ip_string)
 print(f"Valid IP addresses from '{ip_string}': {ip_addresses}")
-
+```
 
 
 ## 17. Subsets & Combinations Pattern
@@ -4610,7 +4610,7 @@ s = "catsanddog"
 words = ["cat", "cats", "and", "sand", "dog"]
 sentences = word_break_all_sentences(s, words)
 print(f"All sentences from '{s}': {sentences}")
-
+```
 
 
 # Part VI: Greedy & Selection
@@ -4965,7 +4965,7 @@ print(f"Partition sizes for '{s}': {partitions}")
 ratings = [1, 0, 2]
 total_candies = candy_distribution(ratings)
 print(f"Total candies needed for ratings {ratings}: {total_candies}")
-
+```
 
 
 ## 19. Top K Elements Pattern
@@ -5316,7 +5316,7 @@ median_finder = find_median_data_stream()
 for num in [1, 2, 3, 4, 5]:
     median_finder.add_number(num)
     print(f"Added {num}, median: {median_finder.find_median()}")
-
+```
 
 
 ## 20. K-way Merge Pattern
@@ -5669,7 +5669,7 @@ def pick_maximum(elements):
 arrays = [[1, 5, 9], [2, 6, 10], [3, 7, 11]]
 custom_merged = k_way_merge_with_condition(arrays, pick_maximum)
 print(f"Merge picking maximum: {custom_merged}")
-
+```
 
 
 # Part VII: Advanced Data Structure Patterns
@@ -6131,7 +6131,7 @@ dictionary = ["cat", "bat", "rat"]
 sentence = "the cattle was rattled by the battery"
 replaced = replace_words_with_roots(dictionary, sentence)
 print(f"Sentence with roots: '{replaced}'")
-
+```
 
 
 ## 22. Monotonic Stack Pattern
@@ -6447,7 +6447,7 @@ spanner = stock_spanner()
 prices = [100, 80, 60, 70, 60, 75, 85]
 spans = [spanner.next(price) for price in prices]
 print(f"Stock price spans: {spans}")
-
+```
 
 
 ## 23. Heap Patterns
@@ -6831,7 +6831,7 @@ for element in [1, 1, 2, 2, 2, 3]:
 
 print(f"Max frequency element: {tracker.get_max_frequency_element()}")  # 2
 print(f"Min frequency element: {tracker.get_min_frequency_element()}")  # 3
-
+```
 
 
 ## 24. Two Heaps Pattern
@@ -7200,7 +7200,7 @@ print(f"3rd smallest: {stream.find_kth_smallest(3)}")
 nums = [3, 5, 2, 4]
 min_pair_sum = maximize_minimum_pair_sum(nums)
 print(f"Maximum minimum pair sum: {min_pair_sum}")
-
+```
 
 
 # Part VIII: Mathematical & Bitwise Patterns
@@ -7582,7 +7582,7 @@ print(f"XOR query results: {query_results}")
 a, b = 10, 7  # 1010 and 0111
 flips = flip_bits_to_convert(a, b)
 print(f"Bit flips to convert {a} to {b}: {flips}")
-
+```
 
 
 ## 26. Mathematical Patterns
@@ -8086,7 +8086,7 @@ print(f"Trailing zeros in {n}!: {zeros}")
 num = 1234567
 english = integer_to_english_words(num)
 print(f"{num} in words: {english}")
-
+```
 
 
 # Conclusion

@@ -13,6 +13,7 @@ from services.doc_parser import DocumentParser
 from services.llm_service import LLMService
 from services.code_generator import CodeGenerator
 from services.diagram_generator import DiagramGenerator
+from services.openapi_parser import OpenAPIParser
 
 load_dotenv()
 
@@ -33,6 +34,7 @@ app.add_middleware(
 
 # Initialize services
 doc_parser = DocumentParser()
+openapi_parser = OpenAPIParser()
 llm_service = LLMService(api_key=os.getenv("ANTHROPIC_API_KEY"))
 code_generator = CodeGenerator(llm_service)
 diagram_generator = DiagramGenerator(llm_service)
@@ -217,6 +219,90 @@ async def generate_code_example(concept: str, language: str = "python"):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.post("/api/parse/openapi")
+async def parse_openapi_spec(url: str = None, spec: Dict[str, Any] = None):
+    """
+    Parse OpenAPI/Swagger specification
+
+    Supports:
+    - OpenAPI 3.0/3.1
+    - Swagger 2.0
+    - From URL or direct JSON/YAML
+
+    Perfect for API documentation!
+    """
+    try:
+        if url:
+            # Parse from URL
+            api_analysis = await openapi_parser.parse_from_url(url)
+        elif spec:
+            # Parse from provided spec
+            api_analysis = await openapi_parser.parse_spec(spec)
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Must provide either 'url' or 'spec'"
+            )
+
+        # Enhance with LLM analysis
+        enhanced_analysis = await llm_service.analyze_api_documentation(
+            api_data=api_analysis
+        )
+
+        return {
+            **api_analysis,
+            'ai_insights': enhanced_analysis
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/generate/api-playground")
+async def generate_api_playground(endpoints: List[Dict[str, Any]], auth_config: Dict[str, Any]):
+    """
+    Generate interactive API playground
+
+    Creates a full testing interface for API endpoints
+    """
+    try:
+        playground_code = await code_generator.generate_api_playground(
+            endpoints=endpoints,
+            auth_config=auth_config
+        )
+
+        return playground_code
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/generate/sdk-example")
+async def generate_sdk_example(
+    endpoint: Dict[str, Any],
+    language: str = "python"
+):
+    """
+    Generate SDK code example for specific endpoint
+
+    Supports: python, javascript, curl, ruby, php, go, java
+    """
+    try:
+        sdk_code = await code_generator.generate_sdk_code(
+            endpoint=endpoint,
+            language=language
+        )
+
+        return {
+            'language': language,
+            'code': sdk_code,
+            'endpoint': endpoint
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.get("/api/health")
 async def health_check():
     """Detailed health check"""
@@ -225,6 +311,7 @@ async def health_check():
         "services": {
             "llm": "connected" if llm_service.client else "disconnected",
             "parser": "ready",
+            "openapi_parser": "ready",
             "generator": "ready"
         }
     }

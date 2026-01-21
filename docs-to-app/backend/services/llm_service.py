@@ -239,3 +239,81 @@ Make questions test understanding, not just memorization."""
 
         except Exception as e:
             raise Exception(f"Quiz generation failed: {str(e)}")
+
+    async def analyze_api_documentation(
+        self,
+        api_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Analyze API documentation (OpenAPI spec) and provide insights
+
+        This creates developer-friendly explanations and onboarding paths
+        """
+        endpoints_summary = f"{api_data['endpoint_count']} endpoints"
+        auth_types = [auth['type'] for auth in api_data.get('authentication', [])]
+
+        # Sample endpoints for analysis
+        sample_endpoints = api_data.get('endpoints', [])[:10]
+
+        prompt = f"""You are analyzing an API to create an excellent developer onboarding experience.
+
+API: {api_data['info']['title']}
+Version: {api_data['info']['version']}
+Description: {api_data['info'].get('description', 'N/A')}
+
+Endpoints: {endpoints_summary}
+Authentication: {', '.join(auth_types) if auth_types else 'None specified'}
+
+Sample Endpoints:
+{json.dumps(sample_endpoints, indent=2)[:3000]}
+
+Your task:
+1. Create a beginner-friendly explanation of what this API does
+2. Identify the most important endpoints developers should know
+3. Create an onboarding path (what to try first, second, third)
+4. Identify common use cases
+5. Highlight any tricky authentication flows
+
+Return JSON:
+{{
+    "summary": "2-3 sentence explanation for developers",
+    "key_endpoints": [
+        {{
+            "endpoint": "GET /users",
+            "purpose": "what it does",
+            "priority": "essential|important|optional"
+        }}
+    ],
+    "onboarding_path": [
+        {{
+            "step": 1,
+            "action": "Set up authentication",
+            "why": "explanation"
+        }}
+    ],
+    "use_cases": ["use case 1", "use case 2"],
+    "auth_guide": "simple explanation of how auth works",
+    "tips": ["helpful tip 1", "helpful tip 2"]
+}}"""
+
+        try:
+            response = self.client.messages.create(
+                model=self.model,
+                max_tokens=4096,
+                messages=[{"role": "user", "content": prompt}]
+            )
+
+            content_text = response.content[0].text
+
+            # Extract JSON
+            if "```json" in content_text:
+                json_text = content_text.split("```json")[1].split("```")[0]
+            elif "```" in content_text:
+                json_text = content_text.split("```")[1].split("```")[0]
+            else:
+                json_text = content_text
+
+            return json.loads(json_text.strip())
+
+        except Exception as e:
+            raise Exception(f"API analysis failed: {str(e)}")
